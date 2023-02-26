@@ -1,34 +1,56 @@
-// 1) def imp ---------------------------------
+const os = require('os');
+const fs = require('fs');
+// console.log('os.platform() :>> ', os.platform());
+// console.log('os.cpus() :>> ', os.cpus());
 
-// ES Modules:
-// import sum from './math';
-// =
-// CommonJS Modules:
-// const sum = require('./math');
+fs.readFile('./math.js', { encoding: 'utf-8' }, (err, data) => {
+  if (err) {
+    // console.log('err :>> ', err);
+  } else {
+    // console.log('data :>> ', data);
+  }
+});
 
-// Використання:
-// console.log('sum(3,4) :>> ', sum(3, 4));
+const fileText = fs.readFileSync('./math.js', { encoding: 'utf-8' });
+// console.log('fileText :>> ', fileText);
 
-// 2) named imp --------------------------------
+fs.readdir('.', (err, data) => {
+  if (err) {
+    // console.log('err', err);
+  } else {
+    data
+      .filter(f => /^.*\.js$/.test(f))
+      .forEach(f =>
+        fs.readFile(f, { encoding: 'utf-8' }, (err, data) => {
+          if (err) {
+            // console.log('err :>> ', err);
+          } else {
+            // console.log('data :>> ', data);
+          }
+        })
+      );
+  }
+});
 
-// 2.а) - збираємо в Math весь експортований об'єкт -
-// ES Modules:
-// import * as Math from './math';
-// CommonJS Modules:
-// const Math = require('./math');
+try {
+  const files = fs.readdirSync('.');
+  // console.log('Files in directory:');
+  files
+    .filter(f => /^.*\.js$/.test(f))
+    .forEach(f => {
+      try {
+        const data = fs.readFileSync(f, { encoding: 'utf-8' });
+        // console.log('Data from file:', f);
+        // console.log(data);
+      } catch (err) {
+        // console.log('Error reading file:', f, err);
+      }
+    });
+} catch (err) {
+  // console.log('Error reading directory:', err);
+}
 
-// Використання:
-// console.log('Math.sum(1,2) :>> ', Math.sum(1, 2));
-// console.log('Math.mult(1,4) :>> ', Math.mult(1, 4));
+console.log('__filename :>> ', __filename);
+console.log('__dirname :>> ', __dirname);
 
-// або
-
-// 2.б) - одразу деструктуризуємо -
-// ES Modules:
-// import { sum } from './math';
-// CommonJS Modules:
-// const { sum, mult } = require('./math');
-
-// Використання:
-// console.log('sum(5,6) :>> ', sum(5, 6));
-// console.log('mult(10,5) :>> ', mult(10, 5));
+console.log('process :>> ', process.env);
